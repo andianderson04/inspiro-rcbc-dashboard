@@ -311,7 +311,7 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>#</th><th>Name</th><th>Entity</th><th>Date of Birth</th><th>Application Date</th><th>Mobile Number</th><th>Reason</th></tr></thead>
+          <thead><tr><th>Name</th><th>Entity</th><th>Date of Birth</th><th>Application Date</th><th>Mobile Number</th><th>Reason</th></tr></thead>
           <tbody id="pendingBody"></tbody>
         </table>
       </div>
@@ -601,7 +601,6 @@ function renderPendingTable() {
   tbody.innerHTML = data.length === 0
     ? `<tr><td colspan="6"><div class="state-msg">No records found</div></td></tr>`
     : data.map((r,i) => `<tr>
-        <td class="muted">${r.row_no ?? i+1}</td>
         <td><strong>${r.full_name ?? '—'}</strong></td>
         <td class="muted">${r.company ?? 'Inspiro'}</td>
         <td class="mono">${r.date_of_birth ?? '—'}</td>
@@ -672,8 +671,8 @@ function downloadCSV(type) {
     headers = ['#','Name','Company','Account Number','RCBC Branch','Date Approved'];
     rows = (window._approvedFiltered||[]).map(r => [r.row_no, r.full_name, r.company, r.account_number, r.rcbc_branch, r.date_approved]);
   } else {
-    headers = ['#','Name','Company','Date of Birth','Application Date','Mobile Number','Reason'];
-    rows = (window._pendingFiltered||[]).map(r => [r.row_no, r.full_name, r.company, r.date_of_birth, r.application_date, r.mobile_number, r.reason]);
+    headers = ['Name','Entity','Date of Birth','Application Date','Mobile Number','Reason'];
+    rows = (window._pendingFiltered||[]).map(r => [r.full_name, r.company, r.date_of_birth, r.application_date, r.mobile_number, r.reason]);
   }
   const csv = [headers, ...rows].map(r => r.map(v=>`"${v??''}"`).join(',')).join('\n');
   const a = document.createElement('a');
