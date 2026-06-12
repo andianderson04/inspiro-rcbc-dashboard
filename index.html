@@ -651,6 +651,12 @@ function renderApproved() {
         </div>
       </div>`).join('');
 
+  // Sort by date_approved, newest first
+  data = [...data].sort((a, b) => {
+    const da = a.date_approved ? new Date(a.date_approved) : new Date(0);
+    const db = b.date_approved ? new Date(b.date_approved) : new Date(0);
+    return db - da;
+  });
   window._approvedFiltered = data;
   renderApprovedTable();
 }
