@@ -374,7 +374,7 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>#</th><th>Name</th><th>Company</th><th>Account Number</th><th>RCBC Branch</th><th>Date Approved</th></tr></thead>
+          <thead><tr><th>Name</th><th>Company</th><th>Account Number</th><th>RCBC Branch</th><th>Date Approved</th></tr></thead>
           <tbody id="approvedBody"></tbody>
         </table>
       </div>
@@ -667,9 +667,8 @@ function renderApprovedTable() {
   if (q) data = data.filter(r => (r.full_name||'').toLowerCase().includes(q) || (r.rcbc_branch||'').toLowerCase().includes(q));
   const tbody = document.getElementById('approvedBody');
   tbody.innerHTML = data.length === 0
-    ? `<tr><td colspan="5"><div class="state-msg">No records found</div></td></tr>`
+    ? `<tr><td colspan="4"><div class="state-msg">No records found</div></td></tr>`
     : data.map((r,i) => `<tr>
-        <td class="muted">${r.row_no ?? i+1}</td>
         <td><strong>${r.full_name ?? '—'}</strong></td>
         <td class="muted">${r.company ?? 'Inspiro'}</td>
         <td class="mono">${r.account_number ?? '—'}</td>
@@ -683,8 +682,8 @@ function renderApprovedTable() {
 function downloadCSV(type) {
   let headers, rows;
   if (type === 'approved') {
-    headers = ['#','Name','Company','Account Number','RCBC Branch','Date Approved'];
-    rows = (window._approvedFiltered||[]).map(r => [r.row_no, r.full_name, r.company, r.account_number, r.rcbc_branch, r.date_approved]);
+    headers = ['Name','Company','Account Number','RCBC Branch','Date Approved'];
+    rows = (window._approvedFiltered||[]).map(r => [r.full_name, r.company, r.account_number, r.rcbc_branch, r.date_approved]);
   } else {
     headers = ['Name','Entity','Date of Birth','Application Date','Mobile Number','Reason'];
     rows = (window._pendingFiltered||[]).map(r => [r.full_name, r.company, r.date_of_birth, r.application_date, r.mobile_number, r.reason]);
