@@ -407,11 +407,21 @@ function filterByCompany(records) {
 
 // ── Fetch ──────────────────────────────────────────────────────
 async function fetchTable(table) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*&order=id.asc&limit=5000`, {
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-  });
-  if (!res.ok) throw new Error(`Failed to fetch ${table}`);
-  return res.json();
+  const pageSize = 1000;
+  let all = [];
+  let offset = 0;
+  while (true) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/${table}?select=*&order=id.asc&limit=${pageSize}&offset=${offset}`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    if (!res.ok) throw new Error(`Failed to fetch ${table}`);
+    const batch = await res.json();
+    all = all.concat(batch);
+    if (batch.length < pageSize) break;
+    offset += pageSize;
+  }
+  return all;
 }
 
 async function loadAll() {
