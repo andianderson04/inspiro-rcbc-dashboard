@@ -219,6 +219,8 @@
     <select class="view-select" id="viewSelect" onchange="switchView(this.value)">
       <option value="pending">❌ Pending / No HR Cert</option>
       <option value="approved">✅ Approved Accounts</option>
+      <option value="onhold">⏸️ On Hold</option>
+      <option value="rejected">🚫 Rejected</option>
     </select>
   </div>
 
@@ -392,6 +394,120 @@
     </div>
   </div>
 
+  <!-- ══ ON HOLD PANEL ══ -->
+  <div class="panel" id="panel-onhold">
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          On Hold
+          <span class="header-badge" style="background:#fef3c7;color:#b45309;" id="onholdHeaderCount">—</span>
+        </div>
+        <div class="page-subtitle">Applications pending additional verification from the employee</div>
+      </div>
+      <button class="btn-csv" onclick="downloadCSV('onhold')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8m0 0L4.5 6.5M7 9l2.5-2.5M2 11.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download CSV
+      </button>
+    </div>
+
+    <div class="kpi-row cols-3">
+      <div class="kpi-card" style="border-left-color:#b45309">
+        <div class="kpi-label">Total On Hold</div>
+        <div class="kpi-value" id="kpi-onhold-total">—</div>
+        <div class="kpi-sub">Awaiting employee response</div>
+      </div>
+      <div class="kpi-card kpi-gold">
+        <div class="kpi-label">Unique Reasons</div>
+        <div class="kpi-value" id="kpi-onhold-reasons">—</div>
+        <div class="kpi-sub">Distinct hold reasons</div>
+      </div>
+      <div class="kpi-card kpi-success">
+        <div class="kpi-label">Unique Candidates</div>
+        <div class="kpi-value" id="kpi-onhold-unique">—</div>
+        <div class="kpi-sub">Individuals on hold</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><div class="card-title">On hold by reason</div></div>
+        <div class="card-body"><div class="reason-list" id="onholdReasonList"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Volume by week</div></div>
+        <div class="card-body"><div class="week-chart-wrap" id="onholdWeekChart"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="table-toolbar">
+        <span style="font-size:13px;font-weight:600">All on hold applications</span>
+        <input type="text" class="search-input" id="onholdSearch" placeholder="Search name…" oninput="renderOnholdTable()" />
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Entity</th><th>Date Created</th><th>On Hold Reason</th></tr></thead>
+          <tbody id="onholdBody"></tbody>
+        </table>
+      </div>
+      <div class="table-footer"><span class="table-count" id="onholdCount"></span></div>
+    </div>
+  </div>
+
+  <!-- ══ REJECTED PANEL ══ -->
+  <div class="panel" id="panel-rejected">
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          Rejected
+          <span class="header-badge" style="background:#fef2f2;color:#b91c1c;" id="rejectedHeaderCount">—</span>
+        </div>
+        <div class="page-subtitle">Applications rejected during the RCBC account opening process</div>
+      </div>
+      <button class="btn-csv" onclick="downloadCSV('rejected')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8m0 0L4.5 6.5M7 9l2.5-2.5M2 11.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download CSV
+      </button>
+    </div>
+
+    <div class="kpi-row cols-3">
+      <div class="kpi-card" style="border-left-color:#b91c1c">
+        <div class="kpi-label">Total Rejected</div>
+        <div class="kpi-value" id="kpi-rejected-total">—</div>
+        <div class="kpi-sub">Applications rejected</div>
+      </div>
+      <div class="kpi-card kpi-gold">
+        <div class="kpi-label">Unique Candidates</div>
+        <div class="kpi-value" id="kpi-rejected-unique">—</div>
+        <div class="kpi-sub">Individuals rejected</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Latest Rejection</div>
+        <div class="kpi-value" style="font-size:20px;padding-top:8px;font-family:'Inter',sans-serif;font-weight:700" id="kpi-rejected-latest">—</div>
+        <div class="kpi-sub">Most recent disposition date</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header"><div class="card-title">Top rejection remarks</div></div>
+      <div class="card-body"><div class="reason-list" id="rejectedReasonList"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="table-toolbar">
+        <span style="font-size:13px;font-weight:600">All rejected applications</span>
+        <input type="text" class="search-input" id="rejectedSearch" placeholder="Search name…" oninput="renderRejectedTable()" />
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Entity</th><th>CIF No.</th><th>Account No.</th><th>Application Date</th><th>Disposition Date</th><th>Remarks</th></tr></thead>
+          <tbody id="rejectedBody"></tbody>
+        </table>
+      </div>
+      <div class="table-footer"><span class="table-count" id="rejectedCount"></span></div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -400,6 +516,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 let allPending  = [];
 let allApproved = [];
+let allOnhold   = [];
+let allRejected = [];
 let dateFrom = null;
 let dateTo   = null;
 let currentView = 'pending';
@@ -438,9 +556,14 @@ async function loadAll() {
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('spinning');
   try {
-    const [pending, approved] = await Promise.all([fetchTable('pending'), fetchTable('approved')]);
+    const [pending, approved, onhold, rejected] = await Promise.all([
+      fetchTable('pending'), fetchTable('approved'),
+      fetchTable('onhold'), fetchTable('rejected')
+    ]);
     allPending  = pending;
     allApproved = approved;
+    allOnhold   = onhold;
+    allRejected = rejected;
     renderAll();
     document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
   } catch(e) {
@@ -534,6 +657,8 @@ function switchView(val) {
 function renderAll() {
   renderPending();
   renderApproved();
+  renderOnhold();
+  renderRejected();
 }
 
 // ── PENDING ────────────────────────────────────────────────────
@@ -700,12 +825,152 @@ function renderApprovedTable() {
   document.getElementById('approvedCount').textContent = `Showing ${data.length} of ${(window._approvedFiltered||[]).length} records`;
 }
 
+// ── ON HOLD ───────────────────────────────────────────────────
+function renderOnhold() {
+  let data = filterByDate(allOnhold, 'date_created');
+  data = filterByCompany(data);
+  data = [...data].sort((a,b) => new Date(b.date_created||0) - new Date(a.date_created||0));
+
+  document.getElementById('onholdHeaderCount').textContent = data.length;
+  document.getElementById('kpi-onhold-total').textContent  = data.length || '—';
+
+  const reasons = [...new Set(data.map(r=>r.onhold_reason).filter(Boolean))];
+  document.getElementById('kpi-onhold-reasons').textContent = reasons.length || '—';
+
+  const uniqueNames = new Set(data.map(r=>(r.full_name||'').trim().toLowerCase()).filter(Boolean));
+  document.getElementById('kpi-onhold-unique').textContent = uniqueNames.size || '—';
+
+  // Reason bars
+  const reasonCounts = {};
+  data.forEach(r => { if (r.onhold_reason) reasonCounts[r.onhold_reason] = (reasonCounts[r.onhold_reason]||0)+1; });
+  const sortedReasons = Object.entries(reasonCounts).sort((a,b)=>b[1]-a[1]);
+  const maxR = sortedReasons[0]?.[1] || 1;
+  document.getElementById('onholdReasonList').innerHTML = sortedReasons.length === 0
+    ? '<div class="state-msg">No data yet</div>'
+    : sortedReasons.map(([label, count]) => {
+        const pct = Math.round((count/data.length)*100);
+        return `<div>
+          <div class="reason-top">
+            <span class="reason-name">${label}</span>
+            <span class="reason-count-badge tag" style="background:#fef3c7;color:#b45309">${count} · ${pct}%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round((count/maxR)*100)}%;background:#b45309"></div></div>
+        </div>`;
+      }).join('');
+
+  // Weekly chart
+  const weekCounts = {};
+  data.forEach(r => {
+    if (!r.date_created) return;
+    const d = new Date(r.date_created);
+    if (isNaN(d)) return;
+    const day = d.getDay();
+    const mon = new Date(d); mon.setDate(d.getDate() - ((day+6)%7));
+    const key = mon.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    weekCounts[key] = (weekCounts[key]||0)+1;
+  });
+  const weekEntries = Object.entries(weekCounts);
+  const maxW = Math.max(...weekEntries.map(w=>w[1]), 1);
+  document.getElementById('onholdWeekChart').innerHTML = weekEntries.length === 0
+    ? '<div class="state-msg">No data yet</div>'
+    : weekEntries.map(([label, count]) => `
+      <div class="week-row">
+        <div class="week-label-left">${label}</div>
+        <div class="week-bar-h-track">
+          <div class="week-bar-h" style="width:${Math.max(Math.round((count/maxW)*100),6)}%;background:linear-gradient(90deg,#fcd34d,#b45309)">
+            <span class="wval">${count}</span>
+          </div>
+        </div>
+      </div>`).join('');
+
+  window._onholdFiltered = data;
+  renderOnholdTable();
+}
+
+function renderOnholdTable() {
+  const q = (document.getElementById('onholdSearch').value || '').trim().toLowerCase();
+  let data = window._onholdFiltered || [];
+  if (q) data = data.filter(r => (r.full_name||'').toLowerCase().includes(q));
+  const tbody = document.getElementById('onholdBody');
+  tbody.innerHTML = data.length === 0
+    ? `<tr><td colspan="4"><div class="state-msg">No records found</div></td></tr>`
+    : data.map(r => `<tr>
+        <td><strong>${r.full_name ?? '—'}</strong></td>
+        <td class="muted">${r.company ?? '—'}</td>
+        <td class="mono">${r.date_created ?? '—'}</td>
+        <td><span class="tag" style="background:#fef3c7;color:#b45309">${r.onhold_reason ?? '—'}</span></td>
+      </tr>`).join('');
+  document.getElementById('onholdCount').textContent = `Showing ${data.length} of ${(window._onholdFiltered||[]).length} records`;
+}
+
+// ── REJECTED ───────────────────────────────────────────────────
+function renderRejected() {
+  let data = filterByDate(allRejected, 'disposition_date');
+  data = filterByCompany(data);
+  data = [...data].sort((a,b) => new Date(b.disposition_date||0) - new Date(a.disposition_date||0));
+
+  document.getElementById('rejectedHeaderCount').textContent = data.length;
+  document.getElementById('kpi-rejected-total').textContent  = data.length || '—';
+
+  const uniqueNames = new Set(data.map(r=>(r.full_name||'').trim().toLowerCase()).filter(Boolean));
+  document.getElementById('kpi-rejected-unique').textContent = uniqueNames.size || '—';
+
+  const dates = data.map(r=>r.disposition_date).filter(Boolean).sort();
+  document.getElementById('kpi-rejected-latest').textContent = dates[dates.length-1] || '—';
+
+  // Remarks bars
+  const remarkCounts = {};
+  data.forEach(r => { if (r.rejected_remarks) remarkCounts[r.rejected_remarks] = (remarkCounts[r.rejected_remarks]||0)+1; });
+  const sortedRemarks = Object.entries(remarkCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxR = sortedRemarks[0]?.[1] || 1;
+  document.getElementById('rejectedReasonList').innerHTML = sortedRemarks.length === 0
+    ? '<div class="state-msg">No data yet</div>'
+    : sortedRemarks.map(([label, count]) => {
+        const pct = Math.round((count/data.length)*100);
+        return `<div>
+          <div class="reason-top">
+            <span class="reason-name" style="font-size:12px">${label}</span>
+            <span class="reason-count-badge tag tag-nohr">${count} · ${pct}%</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${Math.round((count/maxR)*100)}%;background:#b91c1c"></div></div>
+        </div>`;
+      }).join('');
+
+  window._rejectedFiltered = data;
+  renderRejectedTable();
+}
+
+function renderRejectedTable() {
+  const q = (document.getElementById('rejectedSearch').value || '').trim().toLowerCase();
+  let data = window._rejectedFiltered || [];
+  if (q) data = data.filter(r => (r.full_name||'').toLowerCase().includes(q));
+  const tbody = document.getElementById('rejectedBody');
+  tbody.innerHTML = data.length === 0
+    ? `<tr><td colspan="7"><div class="state-msg">No records found</div></td></tr>`
+    : data.map(r => `<tr>
+        <td><strong>${r.full_name ?? '—'}</strong></td>
+        <td class="muted">${r.company ?? '—'}</td>
+        <td class="mono">${r.cif_no ?? '—'}</td>
+        <td class="mono">${r.account_number ?? '—'}</td>
+        <td class="mono">${r.application_date ?? '—'}</td>
+        <td class="mono">${r.disposition_date ?? '—'}</td>
+        <td class="muted" style="font-size:11px;max-width:260px;white-space:normal">${r.rejected_remarks ?? '—'}</td>
+      </tr>`).join('');
+  document.getElementById('rejectedCount').textContent = `Showing ${data.length} of ${(window._rejectedFiltered||[]).length} records`;
+}
+
 // ── CSV ────────────────────────────────────────────────────────
 function downloadCSV(type) {
   let headers, rows;
   if (type === 'approved') {
     headers = ['Name','Company','Account Number','RCBC Branch','Date Approved'];
     rows = (window._approvedFiltered||[]).map(r => [r.full_name, r.company, r.account_number, r.rcbc_branch, r.date_approved]);
+  } else if (type === 'onhold') {
+    headers = ['Name','Entity','Date Created','On Hold Reason'];
+    rows = (window._onholdFiltered||[]).map(r => [r.full_name, r.company, r.date_created, r.onhold_reason]);
+  } else if (type === 'rejected') {
+    headers = ['Name','Entity','CIF No.','Account No.','Application Date','Disposition Date','Rejected Remarks'];
+    rows = (window._rejectedFiltered||[]).map(r => [r.full_name, r.company, r.cif_no, r.account_number, r.application_date, r.disposition_date, r.rejected_remarks]);
   } else {
     headers = ['Name','Entity','Date of Birth','Application Date','Mobile Number','Reason'];
     rows = (window._pendingFiltered||[]).map(r => [r.full_name, r.company, r.date_of_birth, r.application_date, r.mobile_number, r.reason]);
