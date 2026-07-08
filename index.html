@@ -217,10 +217,10 @@
   <!-- Dropdown -->
   <div class="view-select-wrap">
     <select class="view-select" id="viewSelect" onchange="switchView(this.value)">
-      <option value="pending">❌ Pending / No HR Cert</option>
-      <option value="approved">✅ Approved Accounts</option>
-      <option value="onhold">⏸️ On Hold</option>
-      <option value="rejected">🚫 Rejected</option>
+      <option value="pending">⏳ Pending / No HR Cert</option>
+      <option value="approved">✔️ Approved Accounts</option>
+      <option value="onhold">⚠️ On Hold</option>
+      <option value="rejected">⛔ Rejected</option>
     </select>
   </div>
 
@@ -442,7 +442,16 @@
     <div class="card">
       <div class="table-toolbar">
         <span style="font-size:13px;font-weight:600">All on hold applications</span>
-        <input type="text" class="search-input" id="onholdSearch" placeholder="Search name…" oninput="renderOnholdTable()" />
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="toggle-wrap">
+            <span class="toggle-label">Latest per employee</span>
+            <label class="toggle">
+              <input type="checkbox" id="onholdLatestToggle" checked onchange="renderOnhold()" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <input type="text" class="search-input" id="onholdSearch" placeholder="Search name…" oninput="renderOnholdTable()" />
+        </div>
       </div>
       <div class="table-wrap">
         <table>
@@ -496,7 +505,16 @@
     <div class="card">
       <div class="table-toolbar">
         <span style="font-size:13px;font-weight:600">All rejected applications</span>
-        <input type="text" class="search-input" id="rejectedSearch" placeholder="Search name…" oninput="renderRejectedTable()" />
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="toggle-wrap">
+            <span class="toggle-label">Latest per employee</span>
+            <label class="toggle">
+              <input type="checkbox" id="rejectedLatestToggle" checked onchange="renderRejected()" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <input type="text" class="search-input" id="rejectedSearch" placeholder="Search name…" oninput="renderRejectedTable()" />
+        </div>
       </div>
       <div class="table-wrap">
         <table>
@@ -831,6 +849,18 @@ function renderOnhold() {
   data = filterByCompany(data);
   data = [...data].sort((a,b) => new Date(b.date_created||0) - new Date(a.date_created||0));
 
+  // Latest per employee (on by default)
+  const latestOn = document.getElementById('onholdLatestToggle')?.checked ?? true;
+  if (latestOn) {
+    const seen = new Set();
+    data = data.filter(r => {
+      const key = (r.full_name||'').trim().toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
   document.getElementById('onholdHeaderCount').textContent = data.length;
   document.getElementById('kpi-onhold-total').textContent  = data.length || '—';
 
@@ -908,6 +938,18 @@ function renderRejected() {
   let data = filterByDate(allRejected, 'disposition_date');
   data = filterByCompany(data);
   data = [...data].sort((a,b) => new Date(b.disposition_date||0) - new Date(a.disposition_date||0));
+
+  // Latest per employee (on by default)
+  const latestOn = document.getElementById('rejectedLatestToggle')?.checked ?? true;
+  if (latestOn) {
+    const seen = new Set();
+    data = data.filter(r => {
+      const key = (r.full_name||'').trim().toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
 
   document.getElementById('rejectedHeaderCount').textContent = data.length;
   document.getElementById('kpi-rejected-total').textContent  = data.length || '—';
