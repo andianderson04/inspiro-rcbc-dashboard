@@ -850,7 +850,7 @@ function renderApprovedTable() {
         <td class="muted">${r.company ?? 'Inspiro'}</td>
         <td class="mono">${r.account_number ?? '—'}<button class="copy-btn" onclick="copyText('${(r.account_number||'').replace(/'/g,"\'")}',this)">copy</button></td>
         <td class="muted">${r.rcbc_branch ?? '—'}</td>
-        <td class="mono">${r.date_approved ?? '—'}</td>
+        <td class="muted">${r.date_approved ?? '—'}</td>
       </tr>`).join('');
   document.getElementById('approvedCount').textContent = `Showing ${data.length} of ${(window._approvedFiltered||[]).length} records`;
 }
@@ -939,7 +939,7 @@ function renderOnholdTable() {
     : data.map(r => `<tr>
         <td><strong>${r.full_name ?? '—'}</strong></td>
         <td class="muted">${r.company ?? '—'}</td>
-        <td class="mono">${r.date_created ?? '—'}</td>
+        <td class="muted">${r.date_created ?? '—'}</td>
         <td><span class="tag" style="background:#fef3c7;color:#b45309">${r.onhold_reason ?? '—'}</span></td>
       </tr>`).join('');
   document.getElementById('onholdCount').textContent = `Showing ${data.length} of ${(window._onholdFiltered||[]).length} records`;
@@ -1006,8 +1006,8 @@ function renderRejectedTable() {
         <td class="muted">${r.company ?? '—'}</td>
         <td class="mono">${r.cif_no ?? '—'}</td>
         <td class="mono">${r.account_number ?? '—'}</td>
-        <td class="mono">${r.application_date ?? '—'}</td>
-        <td class="mono">${r.disposition_date ?? '—'}</td>
+        <td class="muted">${r.application_date ?? '—'}</td>
+        <td class="muted">${r.disposition_date ?? '—'}</td>
         <td class="muted" style="font-size:11px;max-width:260px;white-space:normal">${r.rejected_remarks ?? '—'}</td>
       </tr>`).join('');
   document.getElementById('rejectedCount').textContent = `Showing ${data.length} of ${(window._rejectedFiltered||[]).length} records`;
