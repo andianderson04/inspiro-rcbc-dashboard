@@ -789,9 +789,9 @@ function renderPendingTable() {
     : data.map((r,i) => `<tr>
         <td><strong>${r.full_name ?? '—'}</strong></td>
         <td class="muted">${r.company ?? 'Inspiro'}</td>
-        <td class="mono">${r.date_of_birth ?? '—'}</td>
-        <td class="mono">${r.application_date ?? '—'}</td>
-        <td class="mono">${r.mobile_number ?? '—'}<button class="copy-btn" onclick="copyText('${(r.mobile_number||'').replace(/'/g,"\'")}',this)">copy</button></td>
+        <td class="muted">${r.date_of_birth ?? '—'}</td>
+        <td class="muted">${r.application_date ?? '—'}</td>
+        <td class="muted">${r.mobile_number ?? '—'}</td>
         <td><span class="tag ${tagClass(r.reason)}">${r.reason ?? '—'}</span></td>
       </tr>`).join('');
   document.getElementById('pendingCount').textContent = `Showing ${data.length} of ${(window._pendingFiltered||[]).length} records`;
@@ -848,7 +848,7 @@ function renderApprovedTable() {
     : data.map((r,i) => `<tr>
         <td><strong>${r.full_name ?? '—'}</strong></td>
         <td class="muted">${r.company ?? 'Inspiro'}</td>
-        <td class="mono">${r.account_number ?? '—'}<button class="copy-btn" onclick="copyText('${(r.account_number||'').replace(/'/g,"\'")}',this)">copy</button></td>
+        <td class="muted">${r.account_number ?? '—'}</td>
         <td class="muted">${r.rcbc_branch ?? '—'}</td>
         <td class="muted">${r.date_approved ?? '—'}</td>
       </tr>`).join('');
@@ -1004,8 +1004,8 @@ function renderRejectedTable() {
     : data.map(r => `<tr>
         <td><strong>${r.full_name ?? '—'}</strong></td>
         <td class="muted">${r.company ?? '—'}</td>
-        <td class="mono">${r.cif_no ?? '—'}</td>
-        <td class="mono">${r.account_number ?? '—'}</td>
+        <td class="muted">${r.cif_no ?? '—'}</td>
+        <td class="muted">${r.account_number ?? '—'}</td>
         <td class="muted">${r.application_date ?? '—'}</td>
         <td class="muted">${r.disposition_date ?? '—'}</td>
         <td class="muted" style="font-size:11px;max-width:260px;white-space:normal">${r.rejected_remarks ?? '—'}</td>
