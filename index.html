@@ -789,7 +789,7 @@ function renderPendingTable() {
     : data.map((r,i) => `<tr>
         <td><strong>${r.full_name ?? '—'}</strong></td>
         <td class="muted">${r.company ?? 'Inspiro'}</td>
-        <td class="muted">${r.date_of_birth ?? '—'}</td>
+        <td class="muted">${(r.date_of_birth ?? '—').replace(/\s+\d{1,2}:\d{2}(AM|PM)/i, '').replace(' 12:00AM','').trim()}</td>
         <td class="muted">${r.application_date ?? '—'}</td>
         <td class="muted">${r.mobile_number ?? '—'}</td>
         <td><span class="tag ${tagClass(r.reason)}">${r.reason ?? '—'}</span></td>
